@@ -22,15 +22,12 @@ type orderRoutes struct {
 // @Accept      json
 // @Produce     json
 // @Success     200 {object} view.OrderView
-// @Failure     500 {object} response
 // @Router      /order/:id [get]
 func (r *orderRoutes) getById(c *gin.Context) {
 	orderId := c.Param("id")
 	order, err := r.uc.GetById(c.Request.Context(), orderId)
 	if err != nil {
-		r.l.Error(err, "http - v1 - order")
-		errorResponse(c, http.StatusInternalServerError, "database problems")
-
+		c.HTML(http.StatusNotFound, "notfound_order.html", nil)
 		return
 	}
 
@@ -39,6 +36,7 @@ func (r *orderRoutes) getById(c *gin.Context) {
 
 	if err != nil {
 		r.l.Error(err, "http - v1 - order")
+		c.HTML(http.StatusInternalServerError, "invalid_data.html", nil)
 		return
 	}
 	c.HTML(http.StatusOK, "index.html", orderView)

@@ -35,27 +35,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/view.OrderView"
                         }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/http.response"
-                        }
                     }
                 }
             }
         }
     },
     "definitions": {
-        "http.response": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string",
-                    "example": "message"
-                }
-            }
-        },
         "view.Delivery": {
             "type": "object",
             "properties": {

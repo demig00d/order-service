@@ -1,11 +1,5 @@
 basePath: /v1
 definitions:
-  http.response:
-    properties:
-      error:
-        example: message
-        type: string
-    type: object
   view.Delivery:
     properties:
       address:
@@ -126,10 +120,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/view.OrderView'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/http.response'
       summary: Show single order
       tags:
       - order
