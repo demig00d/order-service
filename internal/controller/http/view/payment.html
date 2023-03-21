@@ -1,0 +1,49 @@
+{{define "payment"}}
+<table>
+  <thead>
+  <tr>
+    <th colspan="2" class="purple">Payment</th>
+  </tr>
+  </thead>
+  <tr>
+    <td>Transaction</td>
+    <td>{{ .Transaction }}</td>
+  </tr>
+  <tr>
+    <td>RequestId</td>
+    <td>{{ .RequestId }}</td>
+  </tr>
+  <tr>
+    <td>Currency</td>
+    <td>{{ .Currency }}</td>
+  </tr>
+  <tr>
+    <td>Provider</td>
+    <td>{{ .Provider }}</td>
+  </tr>
+  <tr>
+    <td>Amount</td>
+    <td>{{ .Amount }}</td>
+  </tr>
+  <tr>
+    <td>PaymentDt</td>
+    <td>{{ .PaymentDt }}</td>
+  </tr>
+  <tr>
+    <td>Bank</td>
+    <td>{{ .Bank }}</td>
+  </tr>
+  <tr>
+    <td>DeliveryCost</td>
+    <td>{{ .DeliveryCost }}</td>
+  </tr>
+  <tr>
+    <td>GoodsTotal</td>
+    <td>{{ .GoodsTotal }}</td>
+  </tr>
+  <tr>
+    <td>CustomFee</td>
+    <td>{{ .CustomFee }}</td>
+  </tr>
+</table>
+{{ end }}
