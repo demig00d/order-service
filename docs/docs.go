@@ -15,56 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/translation/do-translate": {
-            "post": {
-                "description": "Translate a text",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "translation"
-                ],
-                "summary": "Translate",
-                "operationId": "do-translate",
-                "parameters": [
-                    {
-                        "description": "Set up translation",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/v1.doTranslateRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/entity.Translation"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/v1.response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/v1.response"
-                        }
-                    }
-                }
-            }
-        },
-        "/translation/history": {
+        "/order/:id": {
             "get": {
-                "description": "Show all translation history",
+                "description": "Show order by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -72,21 +25,21 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "translation"
+                    "order"
                 ],
-                "summary": "Show history",
-                "operationId": "history",
+                "summary": "Show single order",
+                "operationId": "order",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v1.historyResponse"
+                            "$ref": "#/definitions/view.OrderView"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v1.response"
+                            "$ref": "#/definitions/http.response"
                         }
                     }
                 }
@@ -94,66 +47,164 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "entity.Translation": {
-            "type": "object",
-            "properties": {
-                "destination": {
-                    "type": "string",
-                    "example": "en"
-                },
-                "original": {
-                    "type": "string",
-                    "example": "текст для перевода"
-                },
-                "source": {
-                    "type": "string",
-                    "example": "auto"
-                },
-                "translation": {
-                    "type": "string",
-                    "example": "text for translation"
-                }
-            }
-        },
-        "v1.doTranslateRequest": {
-            "type": "object",
-            "required": [
-                "destination",
-                "original",
-                "source"
-            ],
-            "properties": {
-                "destination": {
-                    "type": "string",
-                    "example": "en"
-                },
-                "original": {
-                    "type": "string",
-                    "example": "текст для перевода"
-                },
-                "source": {
-                    "type": "string",
-                    "example": "auto"
-                }
-            }
-        },
-        "v1.historyResponse": {
-            "type": "object",
-            "properties": {
-                "history": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/entity.Translation"
-                    }
-                }
-            }
-        },
-        "v1.response": {
+        "http.response": {
             "type": "object",
             "properties": {
                 "error": {
                     "type": "string",
                     "example": "message"
+                }
+            }
+        },
+        "view.Delivery": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "region": {
+                    "type": "string"
+                },
+                "zip": {
+                    "type": "string"
+                }
+            }
+        },
+        "view.Item": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "string"
+                },
+                "chrt_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "nm_id": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "rid": {
+                    "type": "string"
+                },
+                "sale": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "total_price": {
+                    "type": "integer"
+                },
+                "track_number": {
+                    "type": "string"
+                }
+            }
+        },
+        "view.OrderView": {
+            "type": "object",
+            "properties": {
+                "customer_id": {
+                    "type": "string"
+                },
+                "date_created": {
+                    "type": "string"
+                },
+                "delivery": {
+                    "$ref": "#/definitions/view.Delivery"
+                },
+                "delivery_service": {
+                    "type": "string"
+                },
+                "entry": {
+                    "type": "string"
+                },
+                "internal_signature": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/view.Item"
+                    }
+                },
+                "locale": {
+                    "type": "string"
+                },
+                "oof_shard": {
+                    "type": "string"
+                },
+                "order_uid": {
+                    "type": "string"
+                },
+                "payment": {
+                    "$ref": "#/definitions/view.Payment"
+                },
+                "shardkey": {
+                    "type": "string"
+                },
+                "sm_id": {
+                    "type": "integer"
+                },
+                "track_number": {
+                    "type": "string"
+                }
+            }
+        },
+        "view.Payment": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "bank": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "custom_fee": {
+                    "type": "integer"
+                },
+                "delivery_cost": {
+                    "type": "integer"
+                },
+                "goods_total": {
+                    "type": "integer"
+                },
+                "payment_dt": {
+                    "type": "integer"
+                },
+                "provider": {
+                    "type": "string"
+                },
+                "request_id": {
+                    "type": "string"
+                },
+                "transaction": {
+                    "type": "string"
                 }
             }
         }
