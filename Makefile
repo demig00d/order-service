@@ -25,7 +25,7 @@ compose-down: ### Down docker-compose
 .PHONY: compose-down
 
 swag-v1: ### swag init
-	swag init -g internal/controller/http/v1/router.go
+	swag init -g internal/controller/http/router.go
 .PHONY: swag-v1
 
 run: swag-v1 ### swag run
@@ -52,10 +52,6 @@ linter-dotenv: ### check by dotenv linter
 test: ### run test
 	go test -v -cover -race ./internal/...
 .PHONY: test
-
-integration-test: ### run integration-test
-	go clean -testcache && go test -v ./integration-test/...
-.PHONY: integration-test
 
 mock: ### run mockgen
 	mockgen -source ./internal/usecase/interfaces.go -package usecase_test > ./internal/usecase/mocks_test.go
