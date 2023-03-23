@@ -11,3 +11,5 @@ logger:
 
 postgres:
   pool_max: 2
+
+cache_size: 128

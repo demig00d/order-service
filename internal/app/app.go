@@ -4,6 +4,8 @@ package app
 import (
 	"fmt"
 	v1 "github.com/demig00d/order-service/internal/controller/http"
+	"github.com/demig00d/order-service/internal/entity"
+	"github.com/demig00d/order-service/internal/usecase/repo"
 	"os"
 	"os/signal"
 	"syscall"
@@ -12,10 +14,10 @@ import (
 
 	"github.com/demig00d/order-service/config"
 	"github.com/demig00d/order-service/internal/usecase"
-	"github.com/demig00d/order-service/internal/usecase/repo"
 	"github.com/demig00d/order-service/pkg/httpserver"
 	"github.com/demig00d/order-service/pkg/logger"
 	"github.com/demig00d/order-service/pkg/postgres"
+	lru "github.com/hashicorp/golang-lru/v2"
 )
 
 // Run creates objects via constructors.
@@ -29,9 +31,15 @@ func Run(cfg *config.Config) {
 	}
 	defer pg.Close()
 
+	lrucache, err := lru.New2Q[string, entity.Order](128)
+	if err != nil {
+		l.Fatal(fmt.Errorf("app - Run - postgres.New: %w", err))
+	}
+	defer lrucache.Purge()
+
 	// Use case
 	orderUseCase := usecase.New(
-		repo.New(pg),
+		repo.New(pg, lrucache),
 	)
 
 	// HTTP Server

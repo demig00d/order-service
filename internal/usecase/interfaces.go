@@ -19,6 +19,6 @@ type (
 	// OrderRepo -.
 	OrderRepo interface {
 		Store(context.Context, entity.Order) error
-		SelectById(context.Context, string) (entity.Order, error)
+		GetById(context.Context, string) (entity.Order, error)
 	}
 )

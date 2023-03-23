@@ -5,17 +5,38 @@ import (
 	"fmt"
 	"github.com/demig00d/order-service/internal/entity"
 	"github.com/demig00d/order-service/pkg/postgres"
+	lru "github.com/hashicorp/golang-lru/v2"
 	"github.com/jackc/pgx/v4"
 )
 
 // OrderRepo -.
 type OrderRepo struct {
 	*postgres.Postgres
+	cache *lru.TwoQueueCache[string, entity.Order]
 }
 
 // New -.
-func New(pg *postgres.Postgres) *OrderRepo {
-	return &OrderRepo{pg}
+func New(pg *postgres.Postgres, cache *lru.TwoQueueCache[string, entity.Order]) *OrderRepo {
+	return &OrderRepo{pg, cache}
+}
+
+func (r *OrderRepo) GetById(ctx context.Context, id string) (entity.Order, error) {
+	order, ok := r.cache.Get(id)
+
+	if ok {
+		return order, nil
+	}
+
+	order, err := r.SelectById(ctx, id)
+
+	if err != nil {
+		return order, err
+	}
+
+	r.cache.Add(id, order)
+
+	return order, nil
+
 }
 
 // SelectById -.
@@ -49,6 +70,14 @@ func (r *OrderRepo) SelectById(ctx context.Context, id string) (entity.Order, er
 
 // Store -.
 func (r *OrderRepo) Store(ctx context.Context, o entity.Order) error {
+	r.cache.Add(o.OrderUid, o)
+	err := r.Insert(ctx, o)
+
+	return err
+}
+
+// Insert -.
+func (r *OrderRepo) Insert(ctx context.Context, o entity.Order) error {
 	sql, args, err := r.Builder.
 		Insert("orders").
 		Columns("order_uid", `"order"`).
