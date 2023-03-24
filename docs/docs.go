@@ -33,7 +33,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/view.OrderView"
+                            "$ref": "#/definitions/entity.Order"
                         }
                     }
                 }
@@ -41,7 +41,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "view.Delivery": {
+        "entity.Delivery": {
             "type": "object",
             "properties": {
                 "address": {
@@ -70,7 +70,7 @@ const docTemplate = `{
                 }
             }
         },
-        "view.Item": {
+        "entity.Item": {
             "type": "object",
             "properties": {
                 "brand": {
@@ -108,7 +108,7 @@ const docTemplate = `{
                 }
             }
         },
-        "view.OrderView": {
+        "entity.Order": {
             "type": "object",
             "properties": {
                 "customer_id": {
@@ -118,7 +118,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "delivery": {
-                    "$ref": "#/definitions/view.Delivery"
+                    "$ref": "#/definitions/entity.Delivery"
                 },
                 "delivery_service": {
                     "type": "string"
@@ -132,7 +132,7 @@ const docTemplate = `{
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/view.Item"
+                        "$ref": "#/definitions/entity.Item"
                     }
                 },
                 "locale": {
@@ -145,7 +145,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "payment": {
-                    "$ref": "#/definitions/view.Payment"
+                    "$ref": "#/definitions/entity.Payment"
                 },
                 "shardkey": {
                     "type": "string"
@@ -158,7 +158,7 @@ const docTemplate = `{
                 }
             }
         },
-        "view.Payment": {
+        "entity.Payment": {
             "type": "object",
             "properties": {
                 "amount": {

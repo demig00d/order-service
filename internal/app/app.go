@@ -4,7 +4,6 @@ package app
 import (
 	"fmt"
 	v1 "github.com/demig00d/order-service/internal/controller/http"
-	"github.com/demig00d/order-service/internal/entity"
 	"github.com/demig00d/order-service/internal/usecase/repo"
 	"os"
 	"os/signal"
@@ -31,7 +30,7 @@ func Run(cfg *config.Config) {
 	}
 	defer pg.Close()
 
-	lrucache, err := lru.New2Q[string, entity.Order](128)
+	lrucache, err := lru.New2Q[string, repo.OrderDto](128)
 	if err != nil {
 		l.Fatal(fmt.Errorf("app - Run - postgres.New: %w", err))
 	}
@@ -44,7 +43,7 @@ func Run(cfg *config.Config) {
 
 	// HTTP Server
 	handler := gin.New()
-	handler.LoadHTMLGlob("internal/controller/http/view/*")
+	handler.LoadHTMLGlob("internal/view/*")
 
 	v1.NewRouter(handler, l, orderUseCase)
 	httpServer := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))

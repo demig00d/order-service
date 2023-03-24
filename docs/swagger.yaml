@@ -1,6 +1,6 @@
 basePath: /v1
 definitions:
-  view.Delivery:
+  entity.Delivery:
     properties:
       address:
         type: string
@@ -19,7 +19,7 @@ definitions:
       zip:
         type: string
     type: object
-  view.Item:
+  entity.Item:
     properties:
       brand:
         type: string
@@ -44,14 +44,14 @@ definitions:
       track_number:
         type: string
     type: object
-  view.OrderView:
+  entity.Order:
     properties:
       customer_id:
         type: string
       date_created:
         type: string
       delivery:
-        $ref: '#/definitions/view.Delivery'
+        $ref: '#/definitions/entity.Delivery'
       delivery_service:
         type: string
       entry:
@@ -60,7 +60,7 @@ definitions:
         type: string
       items:
         items:
-          $ref: '#/definitions/view.Item'
+          $ref: '#/definitions/entity.Item'
         type: array
       locale:
         type: string
@@ -69,7 +69,7 @@ definitions:
       order_uid:
         type: string
       payment:
-        $ref: '#/definitions/view.Payment'
+        $ref: '#/definitions/entity.Payment'
       shardkey:
         type: string
       sm_id:
@@ -77,7 +77,7 @@ definitions:
       track_number:
         type: string
     type: object
-  view.Payment:
+  entity.Payment:
     properties:
       amount:
         type: integer
@@ -119,7 +119,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/view.OrderView'
+            $ref: '#/definitions/entity.Order'
       summary: Show single order
       tags:
       - order

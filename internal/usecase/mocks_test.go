@@ -6,9 +6,9 @@ package usecase_test
 
 import (
 	context "context"
+	entity "github.com/demig00d/order-service/internal/usecase/repo"
 	reflect "reflect"
 
-	entity "github.com/demig00d/order-service/internal/entity"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -36,10 +36,10 @@ func (m *MockOrder) EXPECT() *MockOrderMockRecorder {
 }
 
 // GetById mocks base method.
-func (m *MockOrder) GetById(arg0 context.Context, arg1 string) (*entity.Order, error) {
+func (m *MockOrder) GetById(arg0 context.Context, arg1 string) (*entity.OrderDto, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetById", arg0, arg1)
-	ret0, _ := ret[0].(*entity.Order)
+	ret0, _ := ret[0].(*entity.OrderDto)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -51,7 +51,7 @@ func (mr *MockOrderMockRecorder) GetById(arg0, arg1 interface{}) *gomock.Call {
 }
 
 // Save mocks base method.
-func (m *MockOrder) Save(arg0 context.Context, arg1 entity.Order) error {
+func (m *MockOrder) Save(arg0 context.Context, arg1 entity.OrderDto) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Save", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -88,10 +88,10 @@ func (m *MockOrderRepo) EXPECT() *MockOrderRepoMockRecorder {
 }
 
 // SelectById mocks base method.
-func (m *MockOrderRepo) SelectById(arg0 context.Context, arg1 string) (*entity.Order, error) {
+func (m *MockOrderRepo) SelectById(arg0 context.Context, arg1 string) (*entity.OrderDto, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SelectById", arg0, arg1)
-	ret0, _ := ret[0].(*entity.Order)
+	ret0, _ := ret[0].(*entity.OrderDto)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -103,7 +103,7 @@ func (mr *MockOrderRepoMockRecorder) SelectById(arg0, arg1 interface{}) *gomock.
 }
 
 // Store mocks base method.
-func (m *MockOrderRepo) Store(arg0 context.Context, arg1 entity.Order) error {
+func (m *MockOrderRepo) Store(arg0 context.Context, arg1 entity.OrderDto) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Store", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -140,10 +140,10 @@ func (m *MockOrderWebAPI) EXPECT() *MockOrderWebAPIMockRecorder {
 }
 
 // Translate mocks base method.
-func (m *MockOrderWebAPI) Translate(arg0 entity.Order) (entity.Order, error) {
+func (m *MockOrderWebAPI) Translate(arg0 entity.OrderDto) (entity.OrderDto, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Translate", arg0)
-	ret0, _ := ret[0].(entity.Order)
+	ret0, _ := ret[0].(entity.OrderDto)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
