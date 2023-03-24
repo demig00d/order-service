@@ -11,6 +11,7 @@ type (
 		HTTP      `yaml:"http"`
 		Log       `yaml:"logger"`
 		PG        `yaml:"postgres"`
+		JetStream `yaml:"jetstream"`
 		CacheSize int `env-required:"true" yaml:"cache_size" env:"CACHE_SIZE"`
 	}
 
@@ -34,6 +35,12 @@ type (
 	PG struct {
 		PoolMax int    `env-required:"true" yaml:"pool_max" env:"PG_POOL_MAX"`
 		URL     string `env-required:"true"                 env:"PG_URL"`
+	}
+
+	JetStream struct {
+		StreamName              string `env-required:"true" yaml:"stream_name" env:"STREAM_NAME"`
+		StreamSubjects          string `env-required:"true" yaml:"stream_subjects" env:"STREAM_SUBJECTS"`
+		SubjectNameOrderCreated string `env-required:"true" yaml:"subject_name_order_created" env:"SUBJECT_NAME_ORDER_CREATED"`
 	}
 )
 

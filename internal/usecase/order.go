@@ -3,25 +3,26 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"github.com/demig00d/order-service/internal/usecase/repo"
 	lru "github.com/hashicorp/golang-lru/v2"
 )
 
 // OrderUseCase -.
 type OrderUseCase struct {
-	repo  OrderRepo
-	cache *lru.TwoQueueCache[string, repo.OrderDto]
+	repo   OrderRepo
+	cache  *lru.TwoQueueCache[string, OrderDto]
+	broker OrderBroker
 }
 
 // New -.
-func New(r OrderRepo) *OrderUseCase {
+func New(r OrderRepo, b OrderBroker) *OrderUseCase {
 	return &OrderUseCase{
-		repo: r,
+		repo:   r,
+		broker: b,
 	}
 }
 
 // GetById - getting single order from store.
-func (uc *OrderUseCase) GetById(ctx context.Context, id string) (repo.OrderDto, error) {
+func (uc *OrderUseCase) GetById(ctx context.Context, id string) (OrderDto, error) {
 	order, err := uc.repo.GetById(ctx, id)
 	if err != nil {
 		return order, fmt.Errorf("OrderUseCase - order - s.repo.GetById: %w", err)
@@ -30,9 +31,15 @@ func (uc *OrderUseCase) GetById(ctx context.Context, id string) (repo.OrderDto, 
 	return order, nil
 }
 
-// Store -.
-func (uc *OrderUseCase) Store(ctx context.Context, order repo.OrderDto) error {
-	err := uc.repo.Store(ctx, order)
+// ReceiveOrder -.
+func (uc *OrderUseCase) ReceiveOrder(ctx context.Context) error {
+	order, err := uc.broker.ConsumeOrder()
+
+	if err != nil {
+		return err
+	}
+
+	err = uc.repo.Store(ctx, order)
 	if err != nil {
 		return fmt.Errorf("OrderUseCase - Store - s.repo.Store: %w", err)
 	}

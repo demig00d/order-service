@@ -5,7 +5,7 @@ services:
     container_name: postgres
     image: postgres
     volumes:
-      - pg-data:/var/lib/postgresql/data
+      - ./pg-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: 'user'
       POSTGRES_PASSWORD: 'pass'
@@ -23,15 +23,15 @@ services:
       - 8080:8080
     depends_on:
       - postgres
+      - jetstream
 
-  integration:
-    build:
-      context: .
-      dockerfile: integration-test/Dockerfile
-    container_name: integration
-    image: integration
-    depends_on:
-      - app
-
-volumes:
-  pg-data:
+  jetstream:
+    container_name: jetstream
+    image: nats
+    ports:
+      - 4222:4222
+      - 8222:8222
+    command:
+      -js -m 8222
+    volumes:
+      - ./jetstream-data:/data

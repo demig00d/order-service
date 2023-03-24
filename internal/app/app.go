@@ -4,7 +4,9 @@ package app
 import (
 	"fmt"
 	v1 "github.com/demig00d/order-service/internal/controller/http"
+	"github.com/demig00d/order-service/internal/usecase/broker"
 	"github.com/demig00d/order-service/internal/usecase/repo"
+	"github.com/demig00d/order-service/pkg/jetstream"
 	"os"
 	"os/signal"
 	"syscall"
@@ -30,15 +32,26 @@ func Run(cfg *config.Config) {
 	}
 	defer pg.Close()
 
-	lrucache, err := lru.New2Q[string, repo.OrderDto](128)
+	lrucache, err := lru.New2Q[string, usecase.OrderDto](128)
 	if err != nil {
 		l.Fatal(fmt.Errorf("app - Run - postgres.New: %w", err))
 	}
 	defer lrucache.Purge()
 
+	// Broker
+	js, err := jetstream.New(cfg.JetStream)
+	if err != nil {
+		l.Fatal(fmt.Errorf("app - Run - jetstream.New: %w", err))
+	}
+	defer js.Close()
+	js.CreateStream()
+	broker := broker.New(js)
+	broker.ConsumeOrder()
+
 	// Use case
 	orderUseCase := usecase.New(
 		repo.New(pg, lrucache),
+		broker,
 	)
 
 	// HTTP Server

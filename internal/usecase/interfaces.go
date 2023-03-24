@@ -3,7 +3,6 @@ package usecase
 
 import (
 	"context"
-	"github.com/demig00d/order-service/internal/usecase/repo"
 )
 
 //go:generate mockgen -source=interfaces.go -destination=./mocks_test.go -package=usecase_test
@@ -11,13 +10,19 @@ import (
 type (
 	// Order -.
 	Order interface {
-		Store(context.Context, repo.OrderDto) error
-		GetById(context.Context, string) (repo.OrderDto, error)
+		ReceiveOrder(context.Context) error
+		GetById(context.Context, string) (OrderDto, error)
 	}
 
 	// OrderRepo -.
 	OrderRepo interface {
-		Store(context.Context, repo.OrderDto) error
-		GetById(context.Context, string) (repo.OrderDto, error)
+		Store(context.Context, OrderDto) error
+		GetById(context.Context, string) (OrderDto, error)
+		GetAll(ctx context.Context) ([]OrderDto, error)
+	}
+
+	// OrderBroker -.
+	OrderBroker interface {
+		ConsumeOrder() (OrderDto, error)
 	}
 )

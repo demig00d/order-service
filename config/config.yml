@@ -13,3 +13,8 @@ postgres:
   pool_max: 2
 
 cache_size: 128
+
+jetstream:
+  stream_name: 'ORDERS'
+  stream_subjects: 'ORDERS.*'
+  subject_name_order_created: 'ORDERS.received'
