@@ -2,12 +2,14 @@ package http
 
 import (
 	"errors"
+
 	"github.com/demig00d/order-service/internal/usecase"
 	"github.com/demig00d/order-service/pkg/logger"
 	"github.com/jackc/pgx/v4"
 
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type orderRoutes struct {
@@ -30,6 +32,7 @@ func (r *orderRoutes) getById(c *gin.Context) {
 		if errors.Unwrap(err) == pgx.ErrNoRows {
 			r.l.Info("http - v1 - order not found")
 			c.HTML(http.StatusNotFound, "notfound_order.html", nil)
+			return
 		}
 		r.l.Error(err, "http - v1 - order")
 		c.HTML(http.StatusInternalServerError, "invalid_data.html", nil)
