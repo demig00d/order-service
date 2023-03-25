@@ -12,7 +12,7 @@ type (
 		Log       `yaml:"logger"`
 		PG        `yaml:"postgres"`
 		JetStream `yaml:"jetstream"`
-		CacheSize int `env-required:"true" yaml:"cache_size" env:"CACHE_SIZE"`
+		CacheSize uint64 `env-required:"true" yaml:"cache_size" env:"CACHE_SIZE"`
 	}
 
 	// App -.

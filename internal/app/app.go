@@ -51,7 +51,7 @@ func Run(cfg *config.Config) {
 	orderBroker := broker.New(js)
 
 	orderDb := db.New(pg, lrucache)
-	orderDb.RecoverCache()
+	orderDb.RecoverCache(cfg.CacheSize)
 	// Use case
 	orderUseCase := usecase.New(
 		orderDb,
