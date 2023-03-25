@@ -1,9 +1,9 @@
-package repo
+package db
 
 import (
 	"context"
 	"fmt"
-	"github.com/demig00d/order-service/delivery"
+	"github.com/demig00d/order-service/internal/repo"
 	"github.com/demig00d/order-service/pkg/postgres"
 	"github.com/georgysavva/scany/pgxscan"
 	lru "github.com/hashicorp/golang-lru/v2"
@@ -13,16 +13,16 @@ import (
 // OrderDb -.
 type OrderDb struct {
 	*postgres.Postgres
-	cache *lru.TwoQueueCache[string, delivery.OrderDto]
+	cache *lru.TwoQueueCache[string, repo.OrderDto]
 }
 
 // New -.
-func New(pg *postgres.Postgres, cache *lru.TwoQueueCache[string, delivery.OrderDto]) *OrderDb {
+func New(pg *postgres.Postgres, cache *lru.TwoQueueCache[string, repo.OrderDto]) *OrderDb {
 	return &OrderDb{pg, cache}
 }
 
 // GetById -.
-func (r *OrderDb) GetById(ctx context.Context, id string) (delivery.OrderDto, error) {
+func (r *OrderDb) GetById(ctx context.Context, id string) (repo.OrderDto, error) {
 	var err error
 
 	orderDto, isOrderInCache := r.cache.Get(id)
@@ -31,7 +31,7 @@ func (r *OrderDb) GetById(ctx context.Context, id string) (delivery.OrderDto, er
 		orderDto, err = r.SelectById(ctx, id)
 
 		if err != nil {
-			return delivery.OrderDto{}, nil
+			return repo.OrderDto{}, nil
 		}
 	}
 
@@ -44,7 +44,7 @@ func (r *OrderDb) GetById(ctx context.Context, id string) (delivery.OrderDto, er
 }
 
 // SelectById -.
-func (r *OrderDb) SelectById(ctx context.Context, id string) (delivery.OrderDto, error) {
+func (r *OrderDb) SelectById(ctx context.Context, id string) (repo.OrderDto, error) {
 	sql, _, err := r.Builder.
 		Select("*").
 		From(`orders`).
@@ -52,7 +52,7 @@ func (r *OrderDb) SelectById(ctx context.Context, id string) (delivery.OrderDto,
 		ToSql()
 
 	if err != nil {
-		return delivery.OrderDto{}, fmt.Errorf("OrderDb - SelectById - r.Builder: %w", err)
+		return repo.OrderDto{}, fmt.Errorf("OrderDb - SelectById - r.Builder: %w", err)
 	}
 
 	var (
@@ -63,10 +63,10 @@ func (r *OrderDb) SelectById(ctx context.Context, id string) (delivery.OrderDto,
 	err = r.Pool.QueryRow(ctx, sql, id).Scan(&orderUid, &orderInfo)
 
 	if err != nil {
-		return delivery.OrderDto{}, err
+		return repo.OrderDto{}, err
 	}
 
-	return delivery.OrderDto{
+	return repo.OrderDto{
 		OrderUid:  orderUid,
 		OrderInfo: orderInfo,
 	}, nil
@@ -86,7 +86,7 @@ func (r *OrderDb) RecoverCache(ctx context.Context, cacheCapacity uint64) error 
 	return err
 }
 
-func (r *OrderDb) Select(ctx context.Context, limit uint64) ([]delivery.OrderDto, error) {
+func (r *OrderDb) Select(ctx context.Context, limit uint64) ([]repo.OrderDto, error) {
 	sql, _, err := r.Builder.
 		Select("*").
 		From("orders").
@@ -97,7 +97,7 @@ func (r *OrderDb) Select(ctx context.Context, limit uint64) ([]delivery.OrderDto
 		return nil, fmt.Errorf("OrderDb - SelectById - r.Pool.Query: %w", err)
 	}
 
-	var ordersDto []delivery.OrderDto
+	var ordersDto []repo.OrderDto
 
 	err = pgxscan.Select(ctx, r.Pool, &ordersDto, sql)
 
@@ -112,7 +112,7 @@ func (r *OrderDb) Select(ctx context.Context, limit uint64) ([]delivery.OrderDto
 }
 
 // Store -.
-func (r *OrderDb) Store(ctx context.Context, o delivery.OrderDto) error {
+func (r *OrderDb) Store(ctx context.Context, o repo.OrderDto) error {
 	r.cache.Add(o.OrderUid, o)
 	err := r.Insert(ctx, o)
 
@@ -120,7 +120,7 @@ func (r *OrderDb) Store(ctx context.Context, o delivery.OrderDto) error {
 }
 
 // Insert -.
-func (r *OrderDb) Insert(ctx context.Context, o delivery.OrderDto) error {
+func (r *OrderDb) Insert(ctx context.Context, o repo.OrderDto) error {
 	sql, args, err := r.Builder.
 		Insert("orders").
 		Columns("order_uid", `"order"`).

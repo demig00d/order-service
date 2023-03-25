@@ -6,7 +6,7 @@ package usecase_test
 
 import (
 	context "context"
-	entity "github.com/demig00d/order-service/internal/usecase/repo"
+	entity "github.com/demig00d/order-service/internal/repo"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -64,31 +64,31 @@ func (mr *MockOrderMockRecorder) Save(arg0, arg1 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockOrder)(nil).Save), arg0, arg1)
 }
 
-// MockOrderRepo is a mock of OrderRepo interface.
-type MockOrderRepo struct {
+// MockOrderDb is a mock of OrderDb interface.
+type MockOrderDb struct {
 	ctrl     *gomock.Controller
-	recorder *MockOrderRepoMockRecorder
+	recorder *MockOrderDbMockRecorder
 }
 
-// MockOrderRepoMockRecorder is the mock recorder for MockOrderRepo.
-type MockOrderRepoMockRecorder struct {
-	mock *MockOrderRepo
+// MockOrderDbMockRecorder is the mock recorder for MockOrderDb.
+type MockOrderDbMockRecorder struct {
+	mock *MockOrderDb
 }
 
-// NewMockOrderRepo creates a new mock instance.
-func NewMockOrderRepo(ctrl *gomock.Controller) *MockOrderRepo {
-	mock := &MockOrderRepo{ctrl: ctrl}
-	mock.recorder = &MockOrderRepoMockRecorder{mock}
+// NewMockOrderDb creates a new mock instance.
+func NewMockOrderDb(ctrl *gomock.Controller) *MockOrderDb {
+	mock := &MockOrderDb{ctrl: ctrl}
+	mock.recorder = &MockOrderDbMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockOrderRepo) EXPECT() *MockOrderRepoMockRecorder {
+func (m *MockOrderDb) EXPECT() *MockOrderDbMockRecorder {
 	return m.recorder
 }
 
 // SelectById mocks base method.
-func (m *MockOrderRepo) SelectById(arg0 context.Context, arg1 string) (*entity.OrderDto, error) {
+func (m *MockOrderDb) SelectById(arg0 context.Context, arg1 string) (*entity.OrderDto, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SelectById", arg0, arg1)
 	ret0, _ := ret[0].(*entity.OrderDto)
@@ -97,13 +97,13 @@ func (m *MockOrderRepo) SelectById(arg0 context.Context, arg1 string) (*entity.O
 }
 
 // SelectById indicates an expected call of SelectById.
-func (mr *MockOrderRepoMockRecorder) SelectById(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockOrderDbMockRecorder) SelectById(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectById", reflect.TypeOf((*MockOrderRepo)(nil).SelectById), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectById", reflect.TypeOf((*MockOrderDb)(nil).SelectById), arg0, arg1)
 }
 
 // Store mocks base method.
-func (m *MockOrderRepo) Store(arg0 context.Context, arg1 entity.OrderDto) error {
+func (m *MockOrderDb) Store(arg0 context.Context, arg1 entity.OrderDto) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Store", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -111,9 +111,9 @@ func (m *MockOrderRepo) Store(arg0 context.Context, arg1 entity.OrderDto) error 
 }
 
 // Store indicates an expected call of Store.
-func (mr *MockOrderRepoMockRecorder) Store(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockOrderDbMockRecorder) Store(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockOrderRepo)(nil).Store), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockOrderDb)(nil).Store), arg0, arg1)
 }
 
 // MockOrderWebAPI is a mock of OrderWebAPI interface.

@@ -1,11 +1,10 @@
 package http
 
 import (
-	"github.com/demig00d/order-service/internal/entity"
 	"github.com/demig00d/order-service/internal/usecase"
 	"github.com/demig00d/order-service/pkg/logger"
+	"github.com/jackc/pgx/v4"
 
-	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -25,18 +24,19 @@ type orderRoutes struct {
 // @Router      /order/:id [get]
 func (r *orderRoutes) getById(c *gin.Context) {
 	orderId := c.Param("id")
-	orderDto, err := r.uc.GetById(c.Request.Context(), orderId)
+	order, err := r.uc.GetById(c.Request.Context(), orderId)
 	if err != nil {
-		c.HTML(http.StatusNotFound, "notfound_order.html", nil)
+		if err == pgx.ErrNoRows {
+			r.l.Info("http - v1 - order not found")
+			c.HTML(http.StatusNotFound, "notfound_order.html", nil)
+		}
+		r.l.Error(err, "http - v1 - order")
+		c.HTML(http.StatusInternalServerError, "invalid_data.html", nil)
+
 		return
 	}
 
-	var order entity.Order
-	err = json.Unmarshal(orderDto.OrderInfo, &order)
-
 	if err != nil {
-		r.l.Error(err, "http - v1 - order")
-		c.HTML(http.StatusInternalServerError, "invalid_data.html", nil)
 		return
 	}
 	c.HTML(http.StatusOK, "index.html", order)

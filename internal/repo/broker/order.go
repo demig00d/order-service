@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/demig00d/order-service/delivery"
 	"github.com/demig00d/order-service/internal/entity"
+	"github.com/demig00d/order-service/internal/repo"
 	"github.com/demig00d/order-service/internal/usecase"
 	"github.com/demig00d/order-service/pkg/jetstream"
 	"github.com/nats-io/nats.go"
@@ -38,7 +38,7 @@ func (b *OrderBroker) ConsumeOrder(ctx context.Context, db usecase.OrderDb) erro
 		}
 
 		orderDto :=
-			delivery.OrderDto{
+			repo.OrderDto{
 				OrderUid:  order.OrderUid,
 				OrderInfo: m.Data,
 			}
