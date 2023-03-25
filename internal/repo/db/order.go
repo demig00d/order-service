@@ -31,7 +31,7 @@ func (r *OrderDb) GetById(ctx context.Context, id string) (repo.OrderDto, error)
 		orderDto, err = r.SelectById(ctx, id)
 
 		if err != nil {
-			return repo.OrderDto{}, nil
+			return repo.OrderDto{}, err
 		}
 	}
 
@@ -72,8 +72,8 @@ func (r *OrderDb) SelectById(ctx context.Context, id string) (repo.OrderDto, err
 	}, nil
 }
 
-func (r *OrderDb) RecoverCache(ctx context.Context, cacheCapacity uint64) error {
-	ordersDto, err := r.Select(ctx, cacheCapacity)
+func (r *OrderDb) RecoverCache(cacheCapacity uint64) error {
+	ordersDto, err := r.Select(context.Background(), cacheCapacity)
 
 	if err != nil {
 		return err

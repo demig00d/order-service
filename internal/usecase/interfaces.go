@@ -20,7 +20,7 @@ type (
 	OrderDb interface {
 		Store(context.Context, repo.OrderDto) error
 		GetById(context.Context, string) (repo.OrderDto, error)
-		RecoverCache(ctx context.Context, cacheCapacity uint64) error
+		RecoverCache(cacheCapacity uint64) error
 	}
 
 	// OrderBroker -.

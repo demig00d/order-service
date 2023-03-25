@@ -1,6 +1,7 @@
 package http
 
 import (
+	"errors"
 	"github.com/demig00d/order-service/internal/usecase"
 	"github.com/demig00d/order-service/pkg/logger"
 	"github.com/jackc/pgx/v4"
@@ -26,7 +27,7 @@ func (r *orderRoutes) getById(c *gin.Context) {
 	orderId := c.Param("id")
 	order, err := r.uc.GetById(c.Request.Context(), orderId)
 	if err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Unwrap(err) == pgx.ErrNoRows {
 			r.l.Info("http - v1 - order not found")
 			c.HTML(http.StatusNotFound, "notfound_order.html", nil)
 		}
