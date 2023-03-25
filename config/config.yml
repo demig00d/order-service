@@ -11,6 +11,7 @@ logger:
 
 postgres:
   pool_max: 2
+  pg_url: 'postgres://localhost:5432/postgres'
 
 cache_size: 128
 

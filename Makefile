@@ -28,10 +28,14 @@ swag-v1: ### swag init
 	swag init -g internal/controller/http/router.go
 .PHONY: swag-v1
 
-run: swag-v1 ### swag run
+run-subscriber: swag-v1 ### swag run
 	go mod tidy && go mod download && \
 	DISABLE_SWAGGER_HTTP_HANDLER='' GIN_MODE=debug CGO_ENABLED=0 go run -tags migrate ./cmd/app
-.PHONY: run
+.PHONY: run-subscriber
+
+run-publisher:
+	go run ./cmd/script/publisher.go
+.PHONY: run-publisher
 
 docker-rm-volume: ### remove docker volume
 	docker volume rm go-clean-template_pg-data
