@@ -13,7 +13,7 @@ require (
 	github.com/ilyakaznacheev/cleanenv v1.4.2
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/nats-io/nats.go v1.24.0
-	github.com/rs/zerolog v1.29.0
+	github.com/rs/zerolog v1.29.1
 	github.com/swaggo/files v1.0.0
 	github.com/swaggo/gin-swagger v1.5.3
 	github.com/swaggo/swag v1.8.10
